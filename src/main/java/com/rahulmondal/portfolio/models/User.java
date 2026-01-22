@@ -1,5 +1,7 @@
 package com.rahulmondal.portfolio.models;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,4 +46,6 @@ public class User {
     @JoinColumn(name = "fk_user_image")
     private Image image;
 
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<UserUpdates> updates;
 }

@@ -1,8 +1,8 @@
 package com.rahulmondal.portfolio.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.rahulmondal.portfolio.dto.requests.UserLoginRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.UserRegistrationRequestDTO;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class AuthController {
 
