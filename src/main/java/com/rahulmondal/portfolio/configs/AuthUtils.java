@@ -21,6 +21,9 @@ public class AuthUtils {
     @Value("${jwt.secret.key}")
     private String jwtSecrete;
 
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
     private SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(jwtSecrete.getBytes(StandardCharsets.UTF_8));
     }
@@ -33,7 +36,7 @@ public class AuthUtils {
                    .claim("secondName", user.getSecondName())
                    .claim("username", user.getUsername())
                    .issuedAt(new Date())
-                   .expiration(new Date(System.currentTimeMillis() + 1000*60*10))
+                   .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                    .signWith(getSecretKey())
                    .compact();
     }

@@ -26,6 +26,7 @@ public class OpenApiController {
 
     @GetMapping("/updates")
     public ResponseEntity<List<UserUpdatesResponseDTO>> getUserUpdates() {
-        return ResponseEntity.ok(openApiService.getUserUpdates());
+        return ResponseEntity.ok(openApiService.getTopUserUpdates());
     }
+
 }

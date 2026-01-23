@@ -1,25 +1,40 @@
 package com.rahulmondal.portfolio.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.rahulmondal.portfolio.dto.response.openapi.UserUpdatesResponseDTO;
+import com.rahulmondal.portfolio.models.User;
+import com.rahulmondal.portfolio.repository.UserRepository;
+import com.rahulmondal.portfolio.repository.UserUpdatesRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class OpenApiService {
 
-    public List<UserUpdatesResponseDTO> getUserUpdates(){
+    @Value("${owner.id}")
+    private Long ownerId;
+
+    private final UserUpdatesRepository userUpdatesRepository;
+    private final UserRepository userRepository;
+
+    public List<UserUpdatesResponseDTO> getTopUserUpdates(){
 
         List<UserUpdatesResponseDTO> res = new ArrayList<>();
+        User user = userRepository.findById(ownerId).orElseThrow();
+
         
-        res.add( UserUpdatesResponseDTO.builder()
-        .time(LocalDateTime.now())
-        .subject("test from server")
-        .text("some updates happenin ")
-        .build());
+        userUpdatesRepository.findTop50ByUserOrderByCreatedAtDesc(user).stream().forEach(
+        u -> res.add(UserUpdatesResponseDTO.builder()
+        .time(u.getCreatedAt())
+        .subject(u.getSubject())
+        .text(u.getText())
+        .build()));
         
         return res;
     }
