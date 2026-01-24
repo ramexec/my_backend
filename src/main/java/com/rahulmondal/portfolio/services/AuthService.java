@@ -38,7 +38,7 @@ public class AuthService {
        User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
     
        String token = authUtils.generateAccessToken(user);
-       return new UserLoginResponseDTO(token,user.getId());
+       return new UserLoginResponseDTO(token,user.getId(),user.getFirstName(),user.getSecondName());
        }
        catch(BadCredentialsException ex){
             throw ex;

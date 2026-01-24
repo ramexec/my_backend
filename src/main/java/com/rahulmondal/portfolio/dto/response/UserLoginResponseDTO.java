@@ -11,5 +11,6 @@ public class UserLoginResponseDTO {
 
     private String jwt;
     private long id;
-    
+    private String firstName;
+    private String secondName;
 }
