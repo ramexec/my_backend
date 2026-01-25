@@ -1,6 +1,5 @@
 package com.rahulmondal.portfolio.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;

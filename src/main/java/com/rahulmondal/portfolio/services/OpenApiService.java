@@ -2,12 +2,16 @@ package com.rahulmondal.portfolio.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.rahulmondal.portfolio.dto.DTOmapper;
+import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
 import com.rahulmondal.portfolio.dto.response.openapi.UserUpdatesResponseDTO;
 import com.rahulmondal.portfolio.models.User;
+import com.rahulmondal.portfolio.repository.ServicesProvidedRepository;
 import com.rahulmondal.portfolio.repository.UserRepository;
 import com.rahulmondal.portfolio.repository.UserUpdatesRepository;
 
@@ -22,7 +26,9 @@ public class OpenApiService {
 
     private final UserUpdatesRepository userUpdatesRepository;
     private final UserRepository userRepository;
-
+    private final ServicesProvidedRepository servicesProvidedRepository;
+    private final DTOmapper dtoMapper;
+    
     public List<UserUpdatesResponseDTO> getTopUserUpdates(){
 
         List<UserUpdatesResponseDTO> res = new ArrayList<>();
@@ -37,5 +43,12 @@ public class OpenApiService {
         .build()));
         
         return res;
+    }
+
+    public List<ServicesProvidedDTO> getDefaultServices() {
+        return servicesProvidedRepository.findByUserId(ownerId)
+                .stream()
+                .map(dtoMapper::toServiceDto)
+                .collect(Collectors.toList());
     }
 }

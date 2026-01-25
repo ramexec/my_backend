@@ -12,6 +12,7 @@ import com.rahulmondal.portfolio.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RequiredArgsConstructor
@@ -27,9 +28,13 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserLoginResponseDTO> signup(@RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
+    public ResponseEntity<Boolean> signup(@RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
         return ResponseEntity.ok(authService.signup(userRegistrationRequestDTO));
     }
     
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkValidity() {
+        return ResponseEntity.ok(authService.check());
+    }
     
 }

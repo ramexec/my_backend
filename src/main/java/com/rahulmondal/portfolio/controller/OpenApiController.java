@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
 import com.rahulmondal.portfolio.dto.response.openapi.UserUpdatesResponseDTO;
 import com.rahulmondal.portfolio.services.OpenApiService;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -29,4 +31,9 @@ public class OpenApiController {
         return ResponseEntity.ok(openApiService.getTopUserUpdates());
     }
 
+    @GetMapping("/services")
+    public List<ServicesProvidedDTO> getServicesDefault() {
+        return openApiService.getDefaultServices();
+    }
+    
 }

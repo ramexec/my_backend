@@ -1,6 +1,5 @@
 package com.rahulmondal.portfolio.services;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +45,7 @@ public class AuthService {
 
     }
 
-    public UserLoginResponseDTO signup(UserRegistrationRequestDTO userRegistrationRequestDTO) {
+    public Boolean signup(UserRegistrationRequestDTO userRegistrationRequestDTO) {
         User user = userRepository.findByUsername(userRegistrationRequestDTO.getUsername()).orElse(null);
         if(user != null)
         {
@@ -62,8 +61,11 @@ public class AuthService {
                                     .role(Role.ROLE_USER)
                                 .build());
 
-        return new UserLoginResponseDTO(null,user.getId()); 
+        return true; 
     }
 
+    public Boolean check() {
+        return true;
+    }
 
 }
