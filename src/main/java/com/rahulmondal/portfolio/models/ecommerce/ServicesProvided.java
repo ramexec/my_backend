@@ -1,4 +1,6 @@
-package com.rahulmondal.portfolio.models;
+package com.rahulmondal.portfolio.models.ecommerce;
+
+import com.rahulmondal.portfolio.models.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

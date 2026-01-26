@@ -2,8 +2,8 @@ package com.rahulmondal.portfolio.dto;
 
 import org.springframework.stereotype.Component;
 
-import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
-import com.rahulmondal.portfolio.models.ServicesProvided;
+import com.rahulmondal.portfolio.dto.ecommerce.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.models.ecommerce.ServicesProvided;
 
 @Component
 public class DTOmapper {

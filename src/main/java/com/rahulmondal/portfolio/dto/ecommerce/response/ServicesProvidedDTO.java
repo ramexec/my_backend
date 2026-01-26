@@ -1,4 +1,4 @@
-package com.rahulmondal.portfolio.dto.response;
+package com.rahulmondal.portfolio.dto.ecommerce.response;
 
 import lombok.Data;
 

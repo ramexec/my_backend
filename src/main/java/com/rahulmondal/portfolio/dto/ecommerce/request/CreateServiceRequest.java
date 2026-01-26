@@ -1,4 +1,4 @@
-package com.rahulmondal.portfolio.dto.requests;
+package com.rahulmondal.portfolio.dto.ecommerce.request;
 
 import lombok.Data;
 import lombok.Getter;

@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.rahulmondal.portfolio.dto.DTOmapper;
-import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.dto.ecommerce.response.ServicesProvidedDTO;
 import com.rahulmondal.portfolio.dto.response.openapi.UserUpdatesResponseDTO;
 import com.rahulmondal.portfolio.models.User;
-import com.rahulmondal.portfolio.repository.ServicesProvidedRepository;
 import com.rahulmondal.portfolio.repository.UserRepository;
 import com.rahulmondal.portfolio.repository.UserUpdatesRepository;
+import com.rahulmondal.portfolio.repository.ecommerce.ServicesProvidedRepository;
 
 import lombok.RequiredArgsConstructor;
 
