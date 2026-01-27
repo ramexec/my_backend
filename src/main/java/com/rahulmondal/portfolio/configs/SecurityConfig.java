@@ -44,7 +44,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((requests) -> 
                             requests
-                            .requestMatchers("/openapi/**" , "/auth/**").permitAll()
+                            .requestMatchers("/openapi/**","/auth/**","/ecommerce/openapi/**").permitAll()
                             .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();

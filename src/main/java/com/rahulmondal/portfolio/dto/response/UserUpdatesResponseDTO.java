@@ -1,4 +1,4 @@
-package com.rahulmondal.portfolio.dto.response.openapi;
+package com.rahulmondal.portfolio.dto.response;
 
 import java.time.LocalDateTime;
 

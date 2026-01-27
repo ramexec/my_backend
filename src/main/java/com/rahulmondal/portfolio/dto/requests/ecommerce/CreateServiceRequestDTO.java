@@ -1,4 +1,4 @@
-package com.rahulmondal.portfolio.dto.ecommerce.request;
+package com.rahulmondal.portfolio.dto.requests.ecommerce;
 
 import lombok.Data;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
-public class CreateServiceRequest {
+public class CreateServiceRequestDTO {
      
     private String title;
     private String description;

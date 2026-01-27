@@ -1,4 +1,4 @@
-package com.rahulmondal.portfolio.services.ecommerce;
+package com.rahulmondal.portfolio.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,12 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.rahulmondal.portfolio.dto.DTOmapper;
-import com.rahulmondal.portfolio.dto.ecommerce.request.CreateServiceRequest;
-import com.rahulmondal.portfolio.dto.ecommerce.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateServiceRequestDTO;
+import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.models.ServicesProvided;
 import com.rahulmondal.portfolio.models.User;
-import com.rahulmondal.portfolio.models.ecommerce.ServicesProvided;
+import com.rahulmondal.portfolio.repository.ServicesProvidedRepository;
 import com.rahulmondal.portfolio.repository.UserRepository;
-import com.rahulmondal.portfolio.repository.ecommerce.ServicesProvidedRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,7 @@ public class ServicesProvidedService {
                 .collect(Collectors.toList());
     }
 
-    public Boolean createService(CreateServiceRequest request) {
+    public Boolean createService(CreateServiceRequestDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName(); 
         

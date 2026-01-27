@@ -1,7 +1,5 @@
 package com.rahulmondal.portfolio.models.ecommerce;
 
-import com.rahulmondal.portfolio.models.User;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,22 +12,25 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "services")
 @Getter
 @Setter
-public class ServicesProvided {
-    
+@Table(name = "ecommerce_products")
+public class Product {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String name;
     private String description;
-    private String price;
-    private boolean featured;
-
+    private String image;
+    private int rating;
+    private int price;
+    private int discount;
+    
+    private boolean isFeatured;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

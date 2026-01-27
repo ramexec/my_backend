@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rahulmondal.portfolio.dto.ecommerce.response.ServicesProvidedDTO;
-import com.rahulmondal.portfolio.dto.response.openapi.UserUpdatesResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.dto.response.UserUpdatesResponseDTO;
 import com.rahulmondal.portfolio.services.OpenApiService;
 
 import lombok.RequiredArgsConstructor;
