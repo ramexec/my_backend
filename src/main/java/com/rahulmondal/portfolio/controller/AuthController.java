@@ -9,6 +9,7 @@ import com.rahulmondal.portfolio.dto.requests.UserRegistrationRequestDTO;
 import com.rahulmondal.portfolio.dto.response.UserLoginResponseDTO;
 import com.rahulmondal.portfolio.services.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Boolean> signup(@RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
+    public ResponseEntity<Boolean> signup(@Valid @RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
         return ResponseEntity.ok(authService.signup(userRegistrationRequestDTO));
     }
     

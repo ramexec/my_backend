@@ -35,6 +35,7 @@ public class AuthUtils {
                    .claim("firstName", user.getFirstName())
                    .claim("secondName", user.getSecondName())
                    .claim("username", user.getUsername())
+                   .claim("role", user.getRole())
                    .issuedAt(new Date())
                    .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                    .signWith(getSecretKey())
