@@ -1,13 +1,10 @@
 package com.rahulmondal.portfolio.services.ecommerce;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.jspecify.annotations.Nullable;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.rahulmondal.portfolio.dto.DTOmapper;
@@ -36,6 +33,25 @@ public class ECommerceService {
         catch(Exception e){
             throw e;
         }
+    }
+
+    public Page<ProductResponseDTO> getAllProductsPaginated(int page , int size , String query){
+
+        if(size <= 0)
+        {
+            size = 1 ; 
+        }
+
+        PageRequest pageRequest = PageRequest.of(page,size);
+        Page<Product> products= null;
+
+        if(query != null && !query.isBlank()){
+            products = productRepository.findByNameContainingIgnoreCase(query,pageRequest);
+        }else{
+            products = productRepository.findAll(pageRequest);
+        }
+
+        return products.map(dtoMapper::toProductResponseDto);
     }
 
     public List<ProductResponseDTO> getAllFeatured() {
