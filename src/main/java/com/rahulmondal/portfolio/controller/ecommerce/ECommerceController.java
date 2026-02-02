@@ -3,10 +3,11 @@ package com.rahulmondal.portfolio.controller.ecommerce;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemsResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
-import com.rahulmondal.portfolio.models.ecommerce.Product;
 import com.rahulmondal.portfolio.services.ecommerce.ECommerceService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @RequestMapping("/ecommerce")
 @RestController
 @RequiredArgsConstructor
 public class ECommerceController {
 
     private final ECommerceService eCommerceService;
+
+    // Products part 
 
     @PostMapping("/product")
     @PreAuthorize("hasRole('ADMIN')")
@@ -51,6 +51,8 @@ public class ECommerceController {
     }
     
 
+    //Category Part 
+
     @PostMapping("/category")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
@@ -68,5 +70,20 @@ public class ECommerceController {
     public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id){
         return ResponseEntity.ok(eCommerceService.deleteCategory(id));
     }
+
+    //CartPart 
+
+    @PostMapping("/cart")
+    public ResponseEntity<Boolean> addToCart(@RequestBody AddToCartRequestDTO addToCartRequestDTO) {
+        return ResponseEntity.ok(eCommerceService.addToCart(addToCartRequestDTO));
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<List<CartItemsResponseDTO>> getPersonalCartItems() {
+        return ResponseEntity.ok(eCommerceService.getPersonalCartItems());
+    }
+    
+    
+    
 }
 

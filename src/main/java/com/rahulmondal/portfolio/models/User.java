@@ -2,7 +2,10 @@ package com.rahulmondal.portfolio.models;
 
 import java.util.List;
 
+import com.rahulmondal.portfolio.models.ecommerce.Cart;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,9 +36,9 @@ public class User {
     private String firstName;
     private String secondName;
 
-    @JoinColumn(unique = true)
+    @Column(unique = true)
     private String username;
-    @JoinColumn(unique = true)
+    @Column(unique = true)
     private String email;
     private String password;
 
@@ -48,4 +51,7 @@ public class User {
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
     private List<UserUpdates> updates;
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Cart cart;
 }

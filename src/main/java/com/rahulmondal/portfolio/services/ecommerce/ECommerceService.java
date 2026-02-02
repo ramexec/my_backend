@@ -1,23 +1,34 @@
 package com.rahulmondal.portfolio.services.ecommerce;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.rahulmondal.portfolio.configs.CustomUserDetails;
 import com.rahulmondal.portfolio.dto.DTOmapper;
+import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemsResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
+import com.rahulmondal.portfolio.models.User;
+import com.rahulmondal.portfolio.models.ecommerce.Cart;
+import com.rahulmondal.portfolio.models.ecommerce.CartItem;
 import com.rahulmondal.portfolio.models.ecommerce.Category;
 import com.rahulmondal.portfolio.models.ecommerce.Product;
+import com.rahulmondal.portfolio.repository.ecommerce.CartItemRepository;
+import com.rahulmondal.portfolio.repository.ecommerce.CartRepository;
 import com.rahulmondal.portfolio.repository.ecommerce.CategoryRepository;
 import com.rahulmondal.portfolio.repository.ecommerce.ProductRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,6 +37,8 @@ public class ECommerceService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final DTOmapper dtoMapper;
 
     public List<ProductResponseDTO> getAllProducts() {
@@ -118,14 +131,14 @@ public class ECommerceService {
         }
     }
 
-    public Boolean updateCategory(Long  id, CreateCategoryRequestDTO entity) {
-        
-        try{
+    public Boolean updateCategory(Long id, CreateCategoryRequestDTO entity) {
+
+        try {
             Category cat = categoryRepository.findById(id).orElseThrow();
             cat.setName(entity.getName());
             categoryRepository.save(cat);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -154,6 +167,55 @@ public class ECommerceService {
             productRepository.save(product);
             return true;
         } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Transactional
+    public Boolean addToCart(AddToCartRequestDTO addToCartRequestDTO) {
+        try {
+            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                    .getUser();
+            Optional<Cart> optionalCart = cartRepository.findByUserId(user.getId());
+
+            Cart cart;
+            if (optionalCart.isPresent()) {
+                cart = optionalCart.get();
+            } else {
+                cart = new Cart();
+                cart.setUser(user);
+                cart = cartRepository.save(cart);
+            }
+
+            Product product= productRepository.findById(addToCartRequestDTO.getProductId()).get();
+            Optional<CartItem> optionalItem;
+            optionalItem = cartItemRepository.findByCartIdAndProductId(cart.getId(),product.getId());
+            
+            CartItem cartItem;
+            if(optionalItem.isPresent()){
+                cartItem = optionalItem.get();
+                cartItem.setQuantity(cartItem.getQuantity() + addToCartRequestDTO.getQuantity());
+            }else{
+                cartItem = new CartItem();
+                cartItem.setCart(cart);
+                cartItem.setProduct(product);
+                cartItem.setQuantity(addToCartRequestDTO.getQuantity());
+                cartItem = cartItemRepository.save(cartItem);
+            }
+            
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<CartItemsResponseDTO> getPersonalCartItems() {
+        
+        try{
+            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+            Cart cart = cartRepository.findByUserId(user.getId()).get();
+            return cart.getCartItems().stream().map(dtoMapper::toCartItemsResponseDTO).collect(Collectors.toList());
+        }catch(Exception e){
             throw e;
         }
     }
