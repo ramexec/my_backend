@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -35,17 +37,36 @@ public class ECommerceController {
     public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO) {
         return ResponseEntity.ok(eCommerceService.createProduct(createProductRequestDTO));
     }
+   
+    @DeleteMapping("/product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable long id){
+        return ResponseEntity.ok(eCommerceService.deleteProduct(id));
+    }
+
+    @PutMapping("/product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> updateProduct(@PathVariable Long id, @RequestBody CreateProductRequestDTO entity) {
+        return ResponseEntity.ok(eCommerceService.updateProduct(id,entity));
+    }
     
+
     @PostMapping("/category")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
         return ResponseEntity.ok(eCommerceService.createCategory(createCategoryRequestDTO));
     }
 
-
-    @DeleteMapping("/product/{id}")
+    @PutMapping("/category/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Boolean> deleteProduct(@PathVariable long id){
-        return ResponseEntity.ok(eCommerceService.deleteProduct(id));
+    public ResponseEntity<Boolean> updateCategory(@PathVariable Long id, @RequestBody CreateCategoryRequestDTO entity) {
+        return ResponseEntity.ok(eCommerceService.updateCategory(id,entity));
+    }
+    
+    @DeleteMapping("/category/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id){
+        return ResponseEntity.ok(eCommerceService.deleteCategory(id));
     }
 }
+

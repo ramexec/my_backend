@@ -3,6 +3,7 @@ package com.rahulmondal.portfolio.services.ecommerce;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,46 @@ public class ECommerceService {
     public Boolean deleteProduct(long id) {
         try {
             productRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Boolean updateCategory(Long  id, CreateCategoryRequestDTO entity) {
+        
+        try{
+            Category cat = categoryRepository.findById(id).orElseThrow();
+            cat.setName(entity.getName());
+            categoryRepository.save(cat);
+            return true;
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public Boolean deleteCategory(Long id) {
+        try {
+            Category cat = categoryRepository.findById(id).orElseThrow();
+            categoryRepository.delete(cat);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Boolean updateProduct(Long id, CreateProductRequestDTO entity) {
+        try {
+            Category cat = categoryRepository.findById(entity.getCategoryId()).orElseThrow();
+            Product product = productRepository.findById(id).orElseThrow();
+            product.setCategory(cat);
+            product.setDescription(entity.getDescription());
+            product.setDiscount(entity.getDiscount());
+            product.setFeatured(entity.isFeatured());
+            product.setImage(entity.getImage());
+            product.setName(entity.getName());
+            product.setPrice(entity.getPrice());
+            productRepository.save(product);
             return true;
         } catch (Exception e) {
             throw e;

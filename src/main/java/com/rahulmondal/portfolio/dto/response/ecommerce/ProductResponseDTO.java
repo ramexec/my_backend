@@ -18,4 +18,6 @@ public class ProductResponseDTO {
     
     private boolean isFeatured;
     private String categoryName;
+
+    private Long categoryId;
 }

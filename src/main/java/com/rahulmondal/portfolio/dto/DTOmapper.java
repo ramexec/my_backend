@@ -35,6 +35,7 @@ public class DTOmapper {
         .price(entity.getPrice())
         .rating(entity.getRating())
         .categoryName(entity.getCategory().getName())
+        .categoryId(entity.getCategory().getId())
         .build();
     }
     
