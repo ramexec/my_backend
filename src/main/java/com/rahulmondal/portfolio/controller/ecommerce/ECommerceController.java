@@ -15,7 +15,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,15 +30,22 @@ public class ECommerceController {
 
     private final ECommerceService eCommerceService;
 
-    @PostMapping("/create/product")
+    @PostMapping("/product")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO) {
         return ResponseEntity.ok(eCommerceService.createProduct(createProductRequestDTO));
     }
     
-    @PostMapping("/create/category")
+    @PostMapping("/category")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
         return ResponseEntity.ok(eCommerceService.createCategory(createCategoryRequestDTO));
+    }
+
+
+    @DeleteMapping("/product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable long id){
+        return ResponseEntity.ok(eCommerceService.deleteProduct(id));
     }
 }

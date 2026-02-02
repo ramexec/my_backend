@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.rahulmondal.portfolio.dto.DTOmapper;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.models.ecommerce.Category;
 import com.rahulmondal.portfolio.models.ecommerce.Product;
@@ -26,28 +27,27 @@ public class ECommerceService {
     private final CategoryRepository categoryRepository;
     private final DTOmapper dtoMapper;
 
-    public List<ProductResponseDTO> getAllProducts(){
-        try{
-           return productRepository.findAll().stream().map(dtoMapper::toProductResponseDto).collect(Collectors.toList());
-        }
-        catch(Exception e){
+    public List<ProductResponseDTO> getAllProducts() {
+        try {
+            return productRepository.findAll().stream().map(dtoMapper::toProductResponseDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
             throw e;
         }
     }
 
-    public Page<ProductResponseDTO> getAllProductsPaginated(int page , int size , String query){
+    public Page<ProductResponseDTO> getAllProductsPaginated(int page, int size, String query) {
 
-        if(size <= 0)
-        {
-            size = 1 ; 
+        if (size <= 0) {
+            size = 1;
         }
 
-        PageRequest pageRequest = PageRequest.of(page,size);
-        Page<Product> products= null;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> products = null;
 
-        if(query != null && !query.isBlank()){
-            products = productRepository.findByNameContainingIgnoreCase(query,pageRequest);
-        }else{
+        if (query != null && !query.isBlank()) {
+            products = productRepository.findByNameContainingIgnoreCase(query, pageRequest);
+        } else {
             products = productRepository.findAll(pageRequest);
         }
 
@@ -55,19 +55,20 @@ public class ECommerceService {
     }
 
     public List<ProductResponseDTO> getAllFeatured() {
-        try{
-            return productRepository.findByisFeaturedTrue().stream().map(dtoMapper::toProductResponseDto).collect(Collectors.toList());
-        }catch(Exception e )
-        {
+        try {
+            return productRepository.findByisFeaturedTrue().stream().map(dtoMapper::toProductResponseDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
             throw e;
         }
     }
 
     public ProductResponseDTO createProduct(CreateProductRequestDTO createProductRequestDTO) {
         Product product = new Product();
-        Category category = categoryRepository.findById(createProductRequestDTO.getCategoryId()).orElseThrow(() -> new RuntimeException("Not Found"));
-        
-        try{
+        Category category = categoryRepository.findById(createProductRequestDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Not Found"));
+
+        try {
             product.setCategory(category);
             product.setDescription(createProductRequestDTO.getDescription());
             product.setDiscount(createProductRequestDTO.getDiscount());
@@ -78,24 +79,41 @@ public class ECommerceService {
             product.setRating(createProductRequestDTO.getRating());
             productRepository.save(product);
             return dtoMapper.toProductResponseDto(product);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw e;
         }
 
     }
 
     public String createCategory(CreateCategoryRequestDTO createCategoryRequestDTO) {
-        try{
+        try {
             Category category = new Category();
             category.setName(createCategoryRequestDTO.getName());
             categoryRepository.save(category);
 
             return category.getName();
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
 
+    }
+
+    public List<CategoryResponseDTO> getCategories() {
+
+        try {
+            return categoryRepository.findAll().stream().map(dtoMapper::toCategoryResponseDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Boolean deleteProduct(long id) {
+        try {
+            productRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

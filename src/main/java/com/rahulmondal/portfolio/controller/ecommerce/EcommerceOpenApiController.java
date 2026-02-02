@@ -2,6 +2,7 @@ package com.rahulmondal.portfolio.controller.ecommerce;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.services.ecommerce.ECommerceService;
 
@@ -33,5 +35,11 @@ public class EcommerceOpenApiController {
     public ResponseEntity<List<ProductResponseDTO>> getAllFeatured() {
         return ResponseEntity.ok(eCommerceService.getAllFeatured());
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryResponseDTO>> getCategories() {
+        return ResponseEntity.ok(eCommerceService.getCategories());
+    }
+    
 
 }

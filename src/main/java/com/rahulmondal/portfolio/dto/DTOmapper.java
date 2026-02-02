@@ -3,8 +3,10 @@ package com.rahulmondal.portfolio.dto;
 import org.springframework.stereotype.Component;
 
 import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.models.ServicesProvided;
+import com.rahulmondal.portfolio.models.ecommerce.Category;
 import com.rahulmondal.portfolio.models.ecommerce.Product;
 
 @Component
@@ -36,4 +38,10 @@ public class DTOmapper {
         .build();
     }
     
+    public CategoryResponseDTO toCategoryResponseDTO(Category entity){
+        return CategoryResponseDTO.builder()
+            .id(entity.getId())
+            .name(entity.getName())
+            .build();
+    }
 }
