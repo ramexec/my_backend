@@ -1,6 +1,7 @@
 package com.rahulmondal.portfolio.controller.ecommerce;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
@@ -13,6 +14,7 @@ import com.rahulmondal.portfolio.services.ecommerce.ECommerceService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,7 +85,9 @@ public class ECommerceController {
         return ResponseEntity.ok(eCommerceService.getPersonalCartItems());
     }
     
-    
-    
+    @DeleteMapping("/cart/{id}")
+    public ResponseEntity<Boolean> deleteCartItem(@PathVariable UUID id){
+        return ResponseEntity.ok(eCommerceService.deleteItemFromCurrentCart(id));
+    }
 }
 

@@ -2,6 +2,7 @@ package com.rahulmondal.portfolio.services.ecommerce;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.jspecify.annotations.Nullable;
@@ -176,7 +177,7 @@ public class ECommerceService {
         try {
             User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                     .getUser();
-            Optional<Cart> optionalCart = cartRepository.findByUserId(user.getId());
+            Optional<Cart> optionalCart = cartRepository.findByUserIdAndIsCurrentCart(user.getId(),true);
 
             Cart cart;
             if (optionalCart.isPresent()) {
@@ -184,6 +185,7 @@ public class ECommerceService {
             } else {
                 cart = new Cart();
                 cart.setUser(user);
+                cart.setCurrentCart(true);
                 cart = cartRepository.save(cart);
             }
 
@@ -213,9 +215,21 @@ public class ECommerceService {
         
         try{
             User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-            Cart cart = cartRepository.findByUserId(user.getId()).get();
+            Cart cart = cartRepository.findByUserIdAndIsCurrentCart(user.getId(),true).get();
             return cart.getCartItems().stream().map(dtoMapper::toCartItemsResponseDTO).collect(Collectors.toList());
         }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public Boolean deleteItemFromCurrentCart(UUID id) {
+        try {
+            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+            Cart cart = cartRepository.findByUserIdAndIsCurrentCart(user.getId(), true).get();
+            CartItem item = cartItemRepository.findByIdAndCartId(id,cart.getId()).get();
+            cartItemRepository.delete(item);
+            return true;
+        } catch (Exception e) {
             throw e;
         }
     }
