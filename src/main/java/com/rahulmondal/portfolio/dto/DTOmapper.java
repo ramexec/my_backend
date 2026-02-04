@@ -3,7 +3,7 @@ package com.rahulmondal.portfolio.dto;
 import org.springframework.stereotype.Component;
 
 import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
-import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemsResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.models.ServicesProvided;
@@ -48,8 +48,8 @@ public class DTOmapper {
             .build();
     }
 
-    public CartItemsResponseDTO toCartItemsResponseDTO(CartItem entity){
-        return CartItemsResponseDTO.builder()
+    public CartItemResponseDTO toCartItemsResponseDTO(CartItem entity){
+        return CartItemResponseDTO.builder()
         .name(entity.getId())
         .quantity(entity.getQuantity())
         .product(this.toProductResponseDto(entity.getProduct()))

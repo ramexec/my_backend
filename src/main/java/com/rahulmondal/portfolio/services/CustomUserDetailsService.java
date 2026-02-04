@@ -25,4 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService{
         return new CustomUserDetails(user);
     }
 
+    public void updateUser(User user){
+        try{
+            userRepository.save(user);
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.rahulmondal.portfolio.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.rahulmondal.portfolio.models.ecommerce.Cart;
@@ -52,6 +53,10 @@ public class User {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
     private List<UserUpdates> updates;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Cart cart;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Cart> cart;
+
+    private String phone;
+    private LocalDateTime createdAt;
+
 }

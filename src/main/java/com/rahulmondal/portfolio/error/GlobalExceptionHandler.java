@@ -3,6 +3,8 @@ package com.rahulmondal.portfolio.error;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.NameNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.rahulmondal.portfolio.error.ecommerce.CartNotFoundException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -26,6 +30,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
     
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ApiError> handleNameNotFound(CartNotFoundException exception){
+        ApiError  apiError = new ApiError(exception.getMessage(), HttpStatus.NOT_FOUND) ;
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExists(UserAlreadyExistsException exception){
+        ApiError apiError = new ApiError(exception.getMessage(),HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ApiError> handleUsernameNotFoundException(UsernameNotFoundException exception){
         ApiError  apiError = new ApiError("Username Not Found ! " + exception.getMessage(), HttpStatus.NOT_FOUND) ;

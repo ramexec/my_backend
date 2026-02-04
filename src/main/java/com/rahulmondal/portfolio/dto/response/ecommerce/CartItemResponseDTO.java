@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CartItemsResponseDTO {
+public class CartItemResponseDTO {
 
     private UUID name;
     private Long quantity;

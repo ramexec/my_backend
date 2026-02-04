@@ -25,7 +25,7 @@ public class Product {
     private String description;
     private String image;
     private int rating;
-    private int price;
+    private double price;
     private int discount;
     
     private boolean isFeatured;

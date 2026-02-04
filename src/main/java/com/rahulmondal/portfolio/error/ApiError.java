@@ -12,6 +12,7 @@ public class ApiError {
     private LocalDateTime timeStamp;
     private String error;
     private HttpStatus statusCode;
+    private int code;
 
     public ApiError(){
         this.timeStamp = LocalDateTime.now();
@@ -21,5 +22,6 @@ public class ApiError {
         this();
         this.error = error;
         this.statusCode = statusCode;
+        this.code = statusCode.value();
     }
 }

@@ -1,5 +1,7 @@
 package com.rahulmondal.portfolio.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +14,7 @@ import com.rahulmondal.portfolio.configs.CustomUserDetails;
 import com.rahulmondal.portfolio.dto.requests.UserLoginRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.UserRegistrationRequestDTO;
 import com.rahulmondal.portfolio.dto.response.UserLoginResponseDTO;
+import com.rahulmondal.portfolio.error.UserAlreadyExistsException;
 import com.rahulmondal.portfolio.models.Role;
 import com.rahulmondal.portfolio.models.User;
 import com.rahulmondal.portfolio.repository.UserRepository;
@@ -49,7 +52,7 @@ public class AuthService {
         User user = userRepository.findByUsername(userRegistrationRequestDTO.getUsername()).orElse(null);
         if(user != null)
         {
-            throw new IllegalStateException("User Alredy exists");
+            throw new UserAlreadyExistsException("User Already exists");
         }
         
         user = userRepository.save(User.builder()
@@ -59,6 +62,7 @@ public class AuthService {
                                     .secondName(userRegistrationRequestDTO.getSecondName())
                                     .email(userRegistrationRequestDTO.getEmail())
                                     .role(Role.ROLE_USER)
+                                    .createdAt(LocalDateTime.now())
                                 .build());
 
         return true; 

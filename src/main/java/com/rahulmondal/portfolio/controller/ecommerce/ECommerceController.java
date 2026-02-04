@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
-import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemsResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.services.ecommerce.ECommerceService;
 
@@ -81,7 +81,7 @@ public class ECommerceController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<List<CartItemsResponseDTO>> getPersonalCartItems() {
+    public ResponseEntity<List<CartItemResponseDTO>> getPersonalCartItems() {
         return ResponseEntity.ok(eCommerceService.getPersonalCartItems());
     }
     
@@ -89,5 +89,13 @@ public class ECommerceController {
     public ResponseEntity<Boolean> deleteCartItem(@PathVariable UUID id){
         return ResponseEntity.ok(eCommerceService.deleteItemFromCurrentCart(id));
     }
+
+    //Cart checkout 
+
+    @PostMapping("/cart/checkout")
+    public ResponseEntity<Boolean> checkoutCurrentCart() {
+        return ResponseEntity.ok(eCommerceService.checkoutCurrentCart());
+    }
+    
 }
 
