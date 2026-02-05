@@ -11,10 +11,10 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "ecommerce_products")
+@Table(name = "ecommerce_products")
 @Getter
 @Setter
-@Table(name = "ecommerce_products")
 public class Product {
 
     @Id

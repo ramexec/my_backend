@@ -8,6 +8,7 @@ import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.OrdersResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.services.ecommerce.ECommerceService;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,48 +34,48 @@ public class ECommerceController {
 
     private final ECommerceService eCommerceService;
 
-    // Products part 
+    // Products part
 
     @PostMapping("/product")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO) {
+    public ResponseEntity<ProductResponseDTO> createProduct(
+            @RequestBody CreateProductRequestDTO createProductRequestDTO) {
         return ResponseEntity.ok(eCommerceService.createProduct(createProductRequestDTO));
     }
-   
+
     @DeleteMapping("/product/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Boolean> deleteProduct(@PathVariable long id){
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable long id) {
         return ResponseEntity.ok(eCommerceService.deleteProduct(id));
     }
 
     @PutMapping("/product/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> updateProduct(@PathVariable Long id, @RequestBody CreateProductRequestDTO entity) {
-        return ResponseEntity.ok(eCommerceService.updateProduct(id,entity));
+        return ResponseEntity.ok(eCommerceService.updateProduct(id, entity));
     }
-    
 
-    //Category Part 
+    // Category Part
 
     @PostMapping("/category")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO){
+    public ResponseEntity<String> createCategory(@RequestBody CreateCategoryRequestDTO createCategoryRequestDTO) {
         return ResponseEntity.ok(eCommerceService.createCategory(createCategoryRequestDTO));
     }
 
     @PutMapping("/category/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> updateCategory(@PathVariable Long id, @RequestBody CreateCategoryRequestDTO entity) {
-        return ResponseEntity.ok(eCommerceService.updateCategory(id,entity));
+        return ResponseEntity.ok(eCommerceService.updateCategory(id, entity));
     }
-    
+
     @DeleteMapping("/category/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable Long id) {
         return ResponseEntity.ok(eCommerceService.deleteCategory(id));
     }
 
-    //CartPart 
+    // CartPart
 
     @PostMapping("/cart")
     public ResponseEntity<Boolean> addToCart(@RequestBody AddToCartRequestDTO addToCartRequestDTO) {
@@ -84,18 +86,35 @@ public class ECommerceController {
     public ResponseEntity<List<CartItemResponseDTO>> getPersonalCartItems() {
         return ResponseEntity.ok(eCommerceService.getPersonalCartItems());
     }
-    
+
     @DeleteMapping("/cart/{id}")
-    public ResponseEntity<Boolean> deleteCartItem(@PathVariable UUID id){
+    public ResponseEntity<Boolean> deleteCartItem(@PathVariable UUID id) {
         return ResponseEntity.ok(eCommerceService.deleteItemFromCurrentCart(id));
     }
 
-    //Cart checkout 
+    // Cart checkout
 
     @PostMapping("/cart/checkout")
     public ResponseEntity<Boolean> checkoutCurrentCart() {
         return ResponseEntity.ok(eCommerceService.checkoutCurrentCart());
     }
-    
-}
 
+    // Orders
+
+    @GetMapping("/orders")
+    public ResponseEntity<Page<OrdersResponseDTO>> getAllOrdersPageable(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int size) {
+        return ResponseEntity.ok(eCommerceService.getAllOrdersPaged(page,size));
+    }
+
+    
+    @GetMapping("/admin/orders")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Page<OrdersResponseDTO>> getAllAdminOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int size) {
+        return ResponseEntity.ok(eCommerceService.getAllOrdersPagedAdmin(page,size));
+    }
+
+}

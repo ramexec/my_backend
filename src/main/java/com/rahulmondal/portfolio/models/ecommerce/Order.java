@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "ecommerce_orders")
 @Getter
 @Setter
 @Table(name = "ecommerce_orders")

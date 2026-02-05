@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.OrdersResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.error.ecommerce.CartNotFoundException;
 import com.rahulmondal.portfolio.models.User;
@@ -33,7 +35,6 @@ import com.rahulmondal.portfolio.repository.ecommerce.CartRepository;
 import com.rahulmondal.portfolio.repository.ecommerce.CategoryRepository;
 import com.rahulmondal.portfolio.repository.ecommerce.OrderRepository;
 import com.rahulmondal.portfolio.repository.ecommerce.ProductRepository;
-import com.rahulmondal.portfolio.services.CustomUserDetailsService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,6 @@ public class ECommerceService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
-    private final CustomUserDetailsService customUserDetailsService;
     private final DTOmapper dtoMapper;
 
     public List<ProductResponseDTO> getAllProducts() {
@@ -219,7 +219,7 @@ public class ECommerceService {
         }
     }
 
-    public List<CartItemResponseDTO> getPersonalCartItems(){
+    public List<CartItemResponseDTO> getPersonalCartItems() {
         User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                 .getUser();
 
@@ -244,29 +244,70 @@ public class ECommerceService {
 
     @Transactional
     public Boolean checkoutCurrentCart() {
-        try{
-            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-            Cart cart = cartRepository.findByUserIdAndIsCurrentCart(user.getId(), true).orElseThrow(() -> new CartNotFoundException("No Cart Exists Yet"));
+        try {
+            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                    .getUser();
+            Cart cart = cartRepository.findByUserIdAndIsCurrentCart(user.getId(), true)
+                    .orElseThrow(() -> new CartNotFoundException("No Cart Exists Yet"));
 
             List<CartItem> items = cart.getCartItems();
 
             double totalCost = 0.0;
             Order order = new Order();
 
-            for(CartItem item : items){
-                totalCost += item.getProduct().getPrice() * item.getQuantity();
+            for (CartItem item : items) {
+                totalCost += (item.getProduct().getPrice()
+                        - (item.getProduct().getPrice() * 0.01 * item.getProduct().getDiscount())) * item.getQuantity();
             }
 
             order.setCart(cart);
             order.setCreatedAt(LocalDateTime.now());
             order.setStatus(OrderStatus.PENDING);
             order.setTotalCost(totalCost);
-            
+
             orderRepository.save(order);
             cart.setCurrentCart(false);
             cartRepository.save(cart);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Page<OrdersResponseDTO> getAllOrdersPaged(int page, int size) {
+
+        if (size <= 0) {
+            size = 1;
+        }
+        try {
+            User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                    .getUser();
+
+            PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+            Page<Order> order = null;
+
+            order = orderRepository.findOrdersByUserId(user.getId(), pageRequest);
+
+            return order.map(dtoMapper::toOrderResponse);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Page<OrdersResponseDTO> getAllOrdersPagedAdmin(int page, int size) {
+        if (size <= 0) {
+            size = 1;
+        }
+        try {
+            PageRequest pageRequest = PageRequest.of(page, size);
+            Page<Order> order = null;
+
+            order = orderRepository.findAllOrderedByStatusAndCreatedAt(pageRequest);
+
+            return order.map(dtoMapper::toOrderResponse);
+
+        } catch (Exception e) {
             throw e;
         }
     }

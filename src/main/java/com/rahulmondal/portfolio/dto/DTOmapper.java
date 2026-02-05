@@ -1,14 +1,18 @@
 package com.rahulmondal.portfolio.dto;
 
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.rahulmondal.portfolio.dto.response.ServicesProvidedDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
+import com.rahulmondal.portfolio.dto.response.ecommerce.OrdersResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.models.ServicesProvided;
 import com.rahulmondal.portfolio.models.ecommerce.CartItem;
 import com.rahulmondal.portfolio.models.ecommerce.Category;
+import com.rahulmondal.portfolio.models.ecommerce.Order;
 import com.rahulmondal.portfolio.models.ecommerce.Product;
 
 @Component
@@ -54,5 +58,16 @@ public class DTOmapper {
         .quantity(entity.getQuantity())
         .product(this.toProductResponseDto(entity.getProduct()))
         .build();
+    }
+
+    public OrdersResponseDTO toOrderResponse(Order entity){
+        return OrdersResponseDTO.builder()
+                .cartItems(entity.getCart().getCartItems().stream().map(this::toCartItemsResponseDTO).collect(Collectors.toList()))
+                .createdAt(entity.getCreatedAt())
+                .completedAt(entity.getCompletedAt())
+                .status(entity.getStatus().toString())
+                .totalCost(entity.getTotalCost())
+                .id(entity.getId())
+                .build();
     }
 }
