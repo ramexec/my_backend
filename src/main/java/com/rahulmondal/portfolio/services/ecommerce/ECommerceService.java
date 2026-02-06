@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,11 +17,13 @@ import com.rahulmondal.portfolio.dto.DTOmapper;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
+import com.rahulmondal.portfolio.dto.requests.ecommerce.EditOrdersRequestDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CategoryResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.OrdersResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
 import com.rahulmondal.portfolio.error.ecommerce.CartNotFoundException;
+import com.rahulmondal.portfolio.error.ecommerce.OrderNotFoundException;
 import com.rahulmondal.portfolio.models.User;
 import com.rahulmondal.portfolio.models.ecommerce.Cart;
 import com.rahulmondal.portfolio.models.ecommerce.CartItem;
@@ -307,6 +308,25 @@ public class ECommerceService {
 
             return order.map(dtoMapper::toOrderResponse);
 
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Boolean editOrder(UUID id, EditOrdersRequestDTO entity) {
+        try {
+            Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not found "));
+
+            if(entity.getStatus().toUpperCase().trim() == OrderStatus.DELIVERED.toString()){
+                order.setCompletedAt(LocalDateTime.now());
+                orderRepository.save(order);
+                return true;
+            }
+
+            order.setStatus(OrderStatus.valueOf(entity.getStatus().toUpperCase().trim()));
+            orderRepository.save(order);
+            return true;
+            
         } catch (Exception e) {
             throw e;
         }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.rahulmondal.portfolio.error.ecommerce.CartNotFoundException;
+import com.rahulmondal.portfolio.error.ecommerce.InvalidCredentialsError;
+import com.rahulmondal.portfolio.error.ecommerce.OrderNotFoundException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -29,7 +31,19 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-    
+
+    @ExceptionHandler(InvalidCredentialsError.class)
+    public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsError exception){
+        ApiError  apiError = new ApiError(exception.getMessage(), HttpStatus.BAD_REQUEST) ;
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiError> handleOrderNotFoundException(OrderNotFoundException exception){
+        ApiError  apiError = new ApiError(exception.getMessage(), HttpStatus.NOT_FOUND) ;
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
+
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<ApiError> handleNameNotFound(CartNotFoundException exception){
         ApiError  apiError = new ApiError(exception.getMessage(), HttpStatus.NOT_FOUND) ;

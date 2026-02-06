@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.AddToCartRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateCategoryRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.ecommerce.CreateProductRequestDTO;
+import com.rahulmondal.portfolio.dto.requests.ecommerce.EditOrdersRequestDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.CartItemResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.OrdersResponseDTO;
 import com.rahulmondal.portfolio.dto.response.ecommerce.ProductResponseDTO;
@@ -117,4 +118,10 @@ public class ECommerceController {
         return ResponseEntity.ok(eCommerceService.getAllOrdersPagedAdmin(page,size));
     }
 
+    @PostMapping("/admin/order/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Boolean> editOrders(@PathVariable UUID id , @RequestBody EditOrdersRequestDTO entity) {
+        return ResponseEntity.ok(eCommerceService.editOrder(id,entity));
+    }
+    
 }

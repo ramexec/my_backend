@@ -29,4 +29,6 @@ public class UserRegistrationRequestDTO {
     @Email(message = "Email must be valid")
     private String email;
     
+    @NotBlank(message = "Phone number is required")
+    private String phone;
 }

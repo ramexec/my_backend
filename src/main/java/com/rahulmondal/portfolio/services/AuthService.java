@@ -15,6 +15,7 @@ import com.rahulmondal.portfolio.dto.requests.UserLoginRequestDTO;
 import com.rahulmondal.portfolio.dto.requests.UserRegistrationRequestDTO;
 import com.rahulmondal.portfolio.dto.response.UserLoginResponseDTO;
 import com.rahulmondal.portfolio.error.UserAlreadyExistsException;
+import com.rahulmondal.portfolio.error.ecommerce.InvalidCredentialsError;
 import com.rahulmondal.portfolio.models.Role;
 import com.rahulmondal.portfolio.models.User;
 import com.rahulmondal.portfolio.repository.UserRepository;
@@ -50,6 +51,10 @@ public class AuthService {
 
     public Boolean signup(UserRegistrationRequestDTO userRegistrationRequestDTO) {
         User user = userRepository.findByUsername(userRegistrationRequestDTO.getUsername()).orElse(null);
+
+        if(userRegistrationRequestDTO.getUsername().length() < 4)
+            throw new InvalidCredentialsError("Username Length must be > 4");
+        
         if(user != null)
         {
             throw new UserAlreadyExistsException("User Already exists");
@@ -62,6 +67,7 @@ public class AuthService {
                                     .secondName(userRegistrationRequestDTO.getSecondName())
                                     .email(userRegistrationRequestDTO.getEmail())
                                     .role(Role.ROLE_USER)
+                                    .phone(userRegistrationRequestDTO.getPhone())
                                     .createdAt(LocalDateTime.now())
                                 .build());
 

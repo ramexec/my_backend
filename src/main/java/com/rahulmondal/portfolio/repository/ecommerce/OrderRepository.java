@@ -27,9 +27,10 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
                 ORDER BY
                   CASE o.status
                     WHEN 'PENDING' THEN 1
-                    WHEN 'COMPLETED' THEN 2
-                    WHEN 'CANCELLED' THEN 3
-                    ELSE 4
+                    WHEN 'CONFIRMED' THEN 2
+                    WHEN 'DELIVERED' THEN 3
+                    WHEN 'CANCELLED' THEN 4
+                    ELSE 5
                   END,
                   o.createdAt DESC
             """)
